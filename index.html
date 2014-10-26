@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <title></title>
+  <link rel="stylesheet" href="js/jquery-ui.css"/>
+  <!--<link rel="stylesheet" href="/css/jquery.ui.rotatable.css"/>-->
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+  <!-- Video element (live stream) -->
+  <div class="video_container">
+    <video autoplay id="video" width="640" height="480"></video>
+    <div id="girl_draggable" style="position: absolute;">
+      <img src="images/ZVgdU68wtEw.jpg" alt="" id="girl" style="width: 200px; height: 200px;"/>
+    </div>
+  </div>
+
+  <div class="screenshot_container">
+    <!-- Canvas element (screenshot) -->
+    <canvas id="canvas" width="640" height="480"></canvas>
+
+    <!-- Capture button -->
+    <button id="capture-btn">Capture!</button>
+    <a id="download-btn">Dwonload!</a>
+  </div>
+
+  <!-- Image URL output -->
+  <!--<label>Image URL</label>-->
+  <!--<input type="text" id="image-url-input" disabled>-->
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="js/jquery-ui.js"></script>
+  <!--<script src="/js/jquery.ui.rotatable.min.js"></script>-->
+  <script src="js/jquery.ui.touch-punch.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

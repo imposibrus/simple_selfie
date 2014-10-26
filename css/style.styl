@@ -1,0 +1,57 @@
+
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.video_container {
+  position: relative;
+  width: 640px;
+  height: 500px;
+  display: inline-block;
+  vertical-align: top;
+  &:before {
+    content: 'Video Stream'
+    position: absolute
+    top: -20px
+    left: 0
+  }
+}
+
+
+#girl_draggable {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+.screenshot_container {
+  position: relative;
+  width: 640px;
+  height: 500px;
+  display: inline-block;
+  vertical-align: top;
+  &:before {
+    content: 'Screenshot'
+    position: absolute
+    top: -20px
+    left: 0
+  }
+}
+
+.screenshot_container video {
+  /*width: 100%;*/
+  /*height: 100%;*/
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+
+
+
+
