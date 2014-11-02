@@ -9,16 +9,6 @@ $(function() {
     this.download = 'asd.png';
   });
 });
-//function downloadCanvas(link, canvasId, filename) {
-//  link.href = document.getElementById(canvasId).toDataURL();
-//  link.download = filename;
-//}
-//
-//document.getElementById('download-btn').addEventListener('click', function() {
-//  downloadCanvas(this, 'canvas', 'test.png');
-//}, false);
-
-
 
 
 
@@ -55,20 +45,22 @@ $(function() {
     imageURL: null,
     // Get the input field to paste in the imageURL.
     imageURLInput: document.querySelector(options.imageURLInput),
+    happyStartTime: false,
+    happyCounter: document.getElementById('happy_counter'),
 
     initialize: function() {
       var that = this;
       // Check if navigator object contains getUserMedia object.
       navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
       // Check if window contains URL object.
-      window.URL = window.URL || window.webkitURL;
+      window.URL = window.URL || window.webkitURL || window.msURL || window.mozURL;
 
       // Check for getUserMedia support.
       if (navigator.getUserMedia) {
         // Get video stream.
         navigator.getUserMedia({
           video: true
-        }, this.gotStream, this.noStream);
+        }, _.bind(this.gotStream, this), _.bind(this.noStream, this));
 
         // Bind capture button to capture method.
         this.captureBtn.onclick = function () {
@@ -78,6 +70,12 @@ $(function() {
         // No getUserMedia support.
         alert('Your browser does not support getUserMedia API.');
       }
+      //var vid = document.getElementById('video');
+      this.ctrack = new clm.tracker({useWebGL : true});
+      this.ctrack.init(pModel);
+
+      this.ec = new emotionClassifier();
+      this.ec.init(emotionModel);
     },
 
     // Stream error.
@@ -88,40 +86,83 @@ $(function() {
 
     // Stream success.
     gotStream: function (stream) {
+      this.video.addEventListener('canplay', _.bind(this.startVideo, this), false);
       // Feed webcam stream to video element.
       // IMPORTANT: video element needs autoplay attribute or it will be frozen at first frame.
       if (window.URL) {
-        video.src = window.URL.createObjectURL(stream);
+        this.video.src = window.URL.createObjectURL(stream);
       } else {
-        video.src = stream; // Opera support.
+        this.video.src = stream; // Opera support.
       }
 
-      $('#canvas').css({width: video.width, height: video.height});
+      $('#canvas').css({width: this.video.width, height: this.video.height});
       // Store the stream.
-      localMediaStream = stream;
+      this.localMediaStream = stream;
+    },
+
+    startVideo: function() {
+      // start video
+      this.video.play();
+      // start tracking
+      this.ctrack.start(this.video);
+      // start loop to draw face
+      this.drawLoop();
+    },
+
+    drawLoop: function() {
+      requestAnimFrame(_.bind(this.drawLoop, this));
+      var cp = this.ctrack.getCurrentParameters();
+
+      var er = this.ec.meanPredict(cp);
+      if (er) {
+        var happy = er.slice(-1)[0];
+        if(happy.emotion == 'happy' && happy.value > 0.3) {
+          if(!this.happyStartTime) {
+            this.happyStartTime = Date.now();
+          } else {
+            this.happyCounter.innerHTML = 'You happy already ' + new Date(Date.now() - this.happyStartTime).getSeconds() + ' seconds!';
+          }
+
+          if(Date.now() - this.happyStartTime > 4000) {
+            // take a photo!
+            this.capture();
+            //$('#download-btn').trigger('click');
+            this.happyStartTime = false;
+          }
+        } else {
+          this.happyStartTime = false;
+        }
+      }
     },
 
     // Capture frame from live video stream.
     capture: function () {
       var that = this;
       // Check if has stream.
-      if (localMediaStream) {
+      if (this.localMediaStream) {
         // Draw whatever is in the video element on to the canvas.
-        that.ctx.drawImage(video, 0, 0);
+        that.ctx.drawImage(this.video, 0, 0);
         var image = new Image(),
             $girlImage = $('#girl'),
             $girlWrp = $('#girl_draggable');
 
         image.onload = function() {
-          that.ctx.drawImage(image, ~~$girlWrp.css('left').replace(/\D+/, ''), ~~$girlWrp.css('top').replace(/\D+/, ''), ~~$girlImage.css('width').replace(/\D+/, ''), ~~$girlImage.css('height').replace(/\D+/, ''));
+          that.ctx.drawImage(
+              image,
+              ~~$girlWrp.css('left').replace(/\D+/, ''),
+              ~~$girlWrp.css('top').replace(/\D+/, ''),
+              ~~$girlImage.css('width').replace(/\D+/, ''),
+              ~~$girlImage.css('height').replace(/\D+/, '')
+          );
         };
         image.src = $girlImage.attr('src');
+
         // Create a data url from the canvas image.
-        dataURL = canvas.toDataURL('image/png');
+        //dataURL = canvas.toDataURL('image/png');
         // Call our method to save the data url to an image.
         //that.saveDataUrlToImage();
       }
-    },
+    }/*,
 
     saveDataUrlToImage: function () {
       var that = this;
@@ -159,7 +200,7 @@ $(function() {
           imageURLInput.value = 'An error occured.';
         }
       });
-    }
+    }*/
 
   };
 
@@ -170,3 +211,6 @@ $(function() {
   window.App = App;
 
 })();
+
+
+
