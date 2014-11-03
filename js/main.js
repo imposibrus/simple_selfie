@@ -120,7 +120,11 @@ $(function() {
           if(!this.happyStartTime) {
             this.happyStartTime = Date.now();
           } else {
-            this.happyCounter.innerHTML = 'You happy already ' + new Date(Date.now() - this.happyStartTime).getSeconds() + ' seconds!';
+            var seconds = new Date(Date.now() - this.happyStartTime).getSeconds();
+            if(seconds >= 1) {
+              this.happyCounter.style.display = 'block';
+            }
+            this.happyCounter.innerHTML = seconds > 3 ? 'Птичка!' : Math.abs(3 - seconds);
           }
 
           if(Date.now() - this.happyStartTime > 4000) {
@@ -130,6 +134,7 @@ $(function() {
             this.happyStartTime = false;
           }
         } else {
+          this.happyCounter.style.display = 'none';
           this.happyStartTime = false;
         }
       }
@@ -154,6 +159,13 @@ $(function() {
               ~~$girlImage.css('width').replace(/\D+/, ''),
               ~~$girlImage.css('height').replace(/\D+/, '')
           );
+          var $link = $('<a/>'),
+              $img = $('<img/>');
+
+          $link[0].href = $img[0].src = document.getElementById('canvas').toDataURL();
+          $link[0].download = 'your_happy_photo.png';
+          $img.appendTo($link);
+          $('#gallery_list').append($link);
         };
         image.src = $girlImage.attr('src');
 

@@ -9,7 +9,11 @@
 </head>
 <body>
   <!-- Video element (live stream) -->
+  <div class="desc">
+    <h1>Разрешите использование камеры, улыбайтесь 3 секунды и скачивайте свои снимки в правой части экрана</h1>
+  </div>
   <div class="video_container">
+    <div id="happy_counter"></div>
     <video autoplay id="video" width="640" height="480"></video>
     <div id="girl_draggable" style="position: absolute;">
       <img src="images/ZVgdU68wtEw.jpg" alt="" id="girl" style="width: 200px; height: 200px;"/>
@@ -18,13 +22,14 @@
 
   <div class="screenshot_container">
     <!-- Canvas element (screenshot) -->
-    <div id="happy_counter"></div>
     <canvas id="canvas" width="640" height="480"></canvas>
 
     <!-- Capture button -->
-    <button id="capture-btn">Capture!</button>
-    <a id="download-btn">Dwonload!</a>
+    <button id="capture-btn" style="opacity: 0;">Capture!</button>
+    <!--<a id="download-btn">Dwonload!</a>-->
   </div>
+
+  <div id="gallery_list"></div>
 
   <!-- Image URL output -->
   <!--<label>Image URL</label>-->
