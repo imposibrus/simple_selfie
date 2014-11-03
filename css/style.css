@@ -50,6 +50,28 @@ a {
   left: 0;
 }
 
+.sidebar_list {
+  list-style: none;
+  padding: 0;
+}
+.sidebar_list li {
+  margin-bottom: 10px;
+}
+.sidebar_list img {
+  width: 150px;
+}
+
+#images_list {
+  position: absolute;
+  top: 0;
+  left: 10px;
+  height: 100%;
+  padding-top: 10px;
+  box-sizing: border-box;
+  width: 170px;
+  overflow-y: scroll;
+}
+
 #gallery_list {
   position: absolute;
   top: 0;
@@ -60,9 +82,7 @@ a {
   width: 170px;
   overflow-y: scroll;
 }
-#gallery_list img {
-  width: 150px;
-}
+
 
 #happy_counter {
   position: absolute;

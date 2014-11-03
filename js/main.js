@@ -1,4 +1,88 @@
 
+var SelfieApp = new Backbone.Marionette.Application();
+
+SelfieApp.addRegions({
+  images: '#images_list',
+  gallery: '#gallery_list',
+  main: '#main'
+});
+
+SelfieApp.module('Gallery', function(Gallery) {
+  var galleryModel = Backbone.Model.extend({
+    defaults: {
+      src: 'asd'
+    }
+  });
+
+  var galleryCollection = Backbone.Collection.extend({
+    model: galleryModel
+  });
+
+  var galleryItemView = Marionette.ItemView.extend({
+    tagName: 'li',
+    className: 'item',
+    template: '#gallery_item_template',
+    model: galleryModel
+  });
+
+  Gallery.Collection = new galleryCollection();
+
+  var galleryCollectionView = Marionette.CollectionView.extend({
+    tagName: 'ul',
+    className: 'gallery_list sidebar_list',
+    collection: Gallery.Collection,
+    childView: galleryItemView
+  });
+
+  Gallery.CollectionView = new galleryCollectionView();
+});
+
+SelfieApp.module('Images', function(Images) {
+  var imageModel = Backbone.Model.extend({
+    defaults: {
+      src: '/images/image_1.jpg'
+    }
+  });
+
+  var imagesCollection = Backbone.Collection.extend({
+    model: imageModel
+  });
+
+  var imageView = Marionette.ItemView.extend({
+    tagName: 'li',
+    className: 'item',
+    template: '#images_item_template',
+    model: imageModel,
+    events: {
+      'click img': 'addToCanvas'
+    },
+    addToCanvas: function() {
+      console.log(this.model);
+    }
+  });
+
+  Images.Collection = new imagesCollection();
+
+  [1, 2, 3, 4].forEach(function(num) {
+    Images.Collection.add({src: '/images/image_' + num + '.jpg'});
+  });
+
+  var imagesCollectionView = Marionette.CollectionView.extend({
+    tagName: 'ul',
+    className: 'images_list sidebar_list',
+    childView: imageView,
+    collection: Images.Collection
+  });
+
+  Images.CollectionView = new imagesCollectionView();
+});
+
+SelfieApp.addInitializer(function() {
+  SelfieApp.gallery.show(SelfieApp.Gallery.CollectionView);
+  SelfieApp.images.show(SelfieApp.Images.CollectionView);
+});
+
+SelfieApp.start();
 
 $(function() {
   $('#girl_draggable').draggable();
@@ -159,13 +243,9 @@ $(function() {
               ~~$girlImage.css('width').replace(/\D+/, ''),
               ~~$girlImage.css('height').replace(/\D+/, '')
           );
-          var $link = $('<a/>'),
-              $img = $('<img/>');
 
-          $link[0].href = $img[0].src = document.getElementById('canvas').toDataURL();
-          $link[0].download = 'your_happy_photo.png';
-          $img.appendTo($link);
-          $('#gallery_list').append($link);
+          SelfieApp.Gallery.Collection.add({src: document.getElementById('canvas').toDataURL()});
+
         };
         image.src = $girlImage.attr('src');
 

@@ -3,9 +3,11 @@
 <head lang="en">
   <meta charset="UTF-8">
   <title></title>
+  <link rel="stylesheet" href="/js/vendor/bootstrap/dist/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="/js/vendor/bootstrap/dist/css/bootstrap-theme.min.css"/>
   <link rel="stylesheet" href="js/jquery-ui.css"/>
   <!--<link rel="stylesheet" href="/css/jquery.ui.rotatable.css"/>-->
-  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="/css/style.css"/>
 </head>
 <body>
   <!-- Video element (live stream) -->
@@ -15,28 +17,33 @@
   <div class="video_container">
     <div id="happy_counter"></div>
     <video autoplay id="video" width="640" height="480"></video>
-    <div id="girl_draggable" style="position: absolute;">
-      <img src="images/ZVgdU68wtEw.jpg" alt="" id="girl" style="width: 200px; height: 200px;"/>
-    </div>
-  </div>
-
-  <div class="screenshot_container">
-    <!-- Canvas element (screenshot) -->
+    <!--<div id="girl_draggable" style="position: absolute;">-->
+      <!--<img src="/images/ZVgdU68wtEw.jpg" alt="" id="girl" style="width: 200px; height: 200px;"/>-->
+    <!--</div>-->
     <canvas id="canvas" width="640" height="480"></canvas>
-
-    <!-- Capture button -->
-    <button id="capture-btn" style="opacity: 0;">Capture!</button>
-    <!--<a id="download-btn">Dwonload!</a>-->
   </div>
 
+  <button id="capture-btn" style="">Capture!</button>
+
+  <div id="images_list"></div>
   <div id="gallery_list"></div>
 
-  <!-- Image URL output -->
-  <!--<label>Image URL</label>-->
-  <!--<input type="text" id="image-url-input" disabled>-->
+  <script id="gallery_item_template" type="html/template">
+    <a href="<%= src %>" download="your_happy_photo.png">
+      <img src="<%= src %>" alt="image"/>
+    </a>
+  </script>
+
+  <script id="images_item_template" type="html/template">
+    <img src="<%= src %>" alt="image"/>
+  </script>
+
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-  <script src="/js/lodash.js"></script>
+  <script>window.jQuery || document.write('<script src="/js/vendor/jquery/dist/jquery.min.js"><\/script>');</script>
+  <script src="/js/vendor/lodash/dist/lodash.underscore.min.js"></script>
+  <script src="/js/vendor/backbone/backbone.js"></script>
+  <script src="/js/vendor/marionette/lib/backbone.marionette.min.js"></script>
   <script src="/js/jquery-ui.js"></script>
   <!--<script src="/js/jquery.ui.rotatable.min.js"></script>-->
   <script src="/js/jquery.ui.touch-punch.js"></script>
@@ -47,5 +54,6 @@
   <script src="/js/emotionmodel.js"></script>
 
   <script src="/js/main.js"></script>
+
 </body>
 </html>
